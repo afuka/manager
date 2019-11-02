@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'mobile', 'password',
+        'username', 'nickname', 'avatar', 'mobile', 'email','password', 'status',
     ];
 
     /**
@@ -28,4 +28,23 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * 获取用户的基本信息
+     *
+     * @return void
+     */
+    public function info()
+    {
+        return $this->hasOne('App\Models\UsersInfo');
+    }
+
+    /**
+     * 获取用户第三方绑定账号信息
+     *
+     * @return void
+     */
+    public function oauths()
+    {
+        return $this->hasMany('App\Models\UsersOauth');
+    }
 }
