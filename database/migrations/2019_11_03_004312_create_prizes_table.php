@@ -16,7 +16,7 @@ class CreatePrizesTable extends Migration
         Schema::create('prizes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('prizes_group_id');
-            $table->bigInteger('product_id');
+            $table->bigInteger('material_id');
             $table->string('name', 64);
             $table->string('bz', 128);
             $table->tinyInteger('level')->default(0);
@@ -34,7 +34,7 @@ class CreatePrizesTable extends Migration
             $table->timestamps();
 
             $table->index('prizes_group_id');	
-            $table->index('product_id');
+            $table->index('material_id');
         });
     }
 

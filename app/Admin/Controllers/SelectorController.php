@@ -23,14 +23,14 @@ class SelectorController extends Controller
         return $result;
     }
 
-    public function products()
+    public function materials()
     {
-        $products = Models\Product::where('status', '1')->get();
+        $materials = Models\Material::where('status', '1')->get();
  
         $result = [
             ['id' => '0', 'text' => '无物料归属'],
         ];
-        foreach($products as $item) {
+        foreach($materials as $item) {
             $result[] = [
                 'id' => $item->id,
                 'text' => $item->title,

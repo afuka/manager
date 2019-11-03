@@ -46,8 +46,8 @@ class PrizesController extends AdminController
         $grid->column('id', 'ID');
         $grid->column('prizes_group_id', '奖品组ID');
         $grid->column('group.title', '奖品组');
-        $grid->column('product_id', '物料ID');
-        $grid->column('product.title', '物料名称');
+        $grid->column('material_id', '物料ID');
+        $grid->column('material.title', '物料名称');
         $grid->column('name', '奖品名称');
         $grid->column('prize_type', '奖品类型')->display(function($type) {
             $type_dic = [
@@ -101,7 +101,7 @@ class PrizesController extends AdminController
 
         $form->tab('基本信息', function($form) {
             $form->select('prizes_group_id', '奖品组')->options('/selector/prizes-groups');
-            $form->select('product_id', '物料')->options('/selector/products');
+            $form->select('material_id', '物料')->options('/selector/materials');
             $form->text('name', '奖品名称');
             $form->number('level', '奖品等级')->default('1')->help('奖品等次，一等奖二等奖类，将会按照这个从小到大排序');
             $form->radio('prize_type', '奖品类型')->options([

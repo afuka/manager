@@ -2,20 +2,20 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Product;
+use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class ProductsController extends AdminController
+class MaterialsController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'App\Models\Product';
+    protected $title = '物料';
 
     /**
      * Make a grid builder.
@@ -24,7 +24,7 @@ class ProductsController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Product);
+        $grid = new Grid(new Material);
 
         $grid->column('id', __('Id'));
         $grid->column('title', __('Title'));
@@ -45,7 +45,7 @@ class ProductsController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Product::findOrFail($id));
+        $show = new Show(Material::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('title', __('Title'));
@@ -65,7 +65,7 @@ class ProductsController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Product);
+        $form = new Form(new Material);
 
         $form->text('title', __('Title'));
         $form->text('sub_title', __('Sub title'));

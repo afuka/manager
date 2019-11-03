@@ -26,9 +26,9 @@ class Prize extends Model
      *
      * @return void
      */
-    public function product()
+    public function material()
     {
-        return $this->belongsTo('App\Models\Product', 'product_id');
+        return $this->belongsTo('App\Models\Material', 'material_id');
     }
 
 }

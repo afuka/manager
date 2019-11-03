@@ -14,12 +14,12 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('admin.home');
     // 筛选条件
     $router->get('/selector/prizes-groups', 'SelectorController@prizeGroups');
-    $router->get('/selector/products', 'SelectorController@products');
+    $router->get('/selector/materials', 'SelectorController@materials');
     // 会员
     $router->resource('users', UserController::class);
     // 抽奖组
     $router->resource('prizes-groups', PrizesGroupController::class);
     $router->resource('prizes', PrizesController::class);
     $router->resource('prizes-logs', PrizesLogController::class);
-    $router->resource('products', ProductsController::class);
+    $router->resource('materials', MaterialsController::class);
 });
