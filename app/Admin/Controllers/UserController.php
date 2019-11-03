@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -43,6 +44,12 @@ class UserController extends AdminController
                 ]);
             });
             
+        });
+        // 去掉删除按钮
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            $actions->disableView();
+            // $actions->disableEdit();
         });
         // 列表显示
         $grid->column('id', 'ID')->sortable();
@@ -86,14 +93,37 @@ class UserController extends AdminController
     protected function form()
     {
         $form = new Form(new User);
+        // 去掉`删除`按钮
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
 
-        $form->image('avatar', '头像');
-        $form->text('nickname', '昵称');
-        $form->text('username', '用户名')->required();
-        $form->mobile('mobile', '手机号')->required();
-        $form->email('email', 'Email');
-        $form->password('password', '密码');
-        $form->switch('status', '状态');
+        $form->tab('基本信息', function ($form) {
+            $form->row(function($row){
+                $row->width(4)->image('avatar', '头像');
+                $row->width(4)->text('nickname', '昵称');
+                $row->width(4)->text('username', '用户名')->required();
+                $row->width(4)->mobile('mobile', '手机号')->required();
+                $row->width(4)->email('email', 'Email');
+                // 拓展表
+                $row->width(4)->text('info.name', '姓名');
+                $row->width(4)->text('info.id_no', '身份证号');
+                $row->width(4)->date('info.birthday', '生日')->format('YYYY-MM-DD');
+                $row->width(4)->select('info.gender', '性别')->options([
+                    'male' => '男',
+                    'female' => '女',
+                    'unknown' => '未知'
+                ]);
+                $row->width(4)->switch('status', '状态');
+            });
+        })->tab('拓展信息', function ($form) {
+            // json 类型
+            $form->embeds('info.ext_info', '附加信息', function ($form) {
+                $form->textarea('memo', '描述');
+            });
+
+        });
 
         return $form;
     }

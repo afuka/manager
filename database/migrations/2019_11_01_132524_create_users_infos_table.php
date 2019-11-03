@@ -14,11 +14,11 @@ class CreateUsersInfosTable extends Migration
     public function up()
     {
         Schema::create('users_infos', function (Blueprint $table) {
-            $table->bigIncrements('id')->autoIncrement();
+            $table->bigIncrements('id');
             $table->bigInteger('user_id')->unique();
             $table->string('name', 16);
             $table->string('id_no', 18);
-            $table->enum('gender', ['female', 'male', 'unknown']);
+            $table->enum('gender', ['female', 'male', 'unknown'])->default('unknown');
             $table->date('birthday');
             $table->string('province')->default('');
             $table->string('city')->default('');

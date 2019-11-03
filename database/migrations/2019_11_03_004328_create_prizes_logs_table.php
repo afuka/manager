@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersOauthsTable extends Migration
+class CreatePrizesLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateUsersOauthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_oauths', function (Blueprint $table) {
+        Schema::create('prizes_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id')->unique();
-            $table->string('oauth', 16);
-            $table->string('appid', 32);
-            $table->string('openid', 64);
-            $table->json('ext_info')->nullable();
+            $table->bigInteger('prize_group_id');
+            $table->bigInteger('prize_id');
+            $table->bigInteger('user_id');
+            $table->json('leaving_capital');
+            $table->string('ip', 16);
+            $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateUsersOauthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_oauths');
+        Schema::dropIfExists('prizes_logs');
     }
 }
