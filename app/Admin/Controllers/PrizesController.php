@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Prize;
 use Encore\Admin\Controllers\AdminController;
+use Illuminate\Support\Arr;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -40,7 +41,6 @@ class PrizesController extends AdminController
                     0 => '停用',
                 ]);
             });
-            
         });
 
         $grid->column('id', 'ID');
@@ -55,7 +55,7 @@ class PrizesController extends AdminController
                 'virtual' => '虚拟奖',
                 'material' => '实物奖品',
             ];
-            return Arr::get($status_dic, $status, '');
+            return Arr::get($type_dic, $type, '');
         });
         $grid->column('status', '状态')->display(function($status) {
             $status_dic = [
@@ -86,22 +86,6 @@ class PrizesController extends AdminController
     {
         $show = new Show(Prize::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('prizes_group_id', __('Prize group id'));
-        $show->field('product_id', __('Product id'));
-        $show->field('name', __('Name'));
-        $show->field('bz', __('Bz'));
-        $show->field('level', __('Level'));
-        $show->field('prize_type', __('Prize type'));
-        $show->field('num', __('Num'));
-        $show->field('probability', __('Probability'));
-        $show->field('user_limit_type', __('User limit type'));
-        $show->field('date_config', __('Date config'));
-        $show->field('ext_info', __('Ext info'));
-        $show->field('rule_bz', __('Rule bz'));
-        $show->field('status', __('Status'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -115,19 +99,41 @@ class PrizesController extends AdminController
     {
         $form = new Form(new Prize);
 
-        $form->number('prizes_group_id', __('Prize group id'));
-        $form->number('product_id', __('Product id'));
-        $form->text('name', __('Name'));
-        $form->text('bz', __('Bz'));
-        $form->switch('level', __('Level'));
-        $form->text('prize_type', __('Prize type'))->default('empty');
-        $form->number('num', __('Num'));
-        $form->number('probability', __('Probability'));
-        $form->text('user_limit_type', __('User limit type'))->default('no');
-        $form->text('date_config', __('Date config'));
-        $form->text('ext_info', __('Ext info'));
-        $form->textarea('rule_bz', __('Rule bz'));
-        $form->text('status', __('Status'))->default('1');
+        $form->tab('基本信息', function($form) {
+            $form->select('prizes_group_id', '奖品组')->options('/selector/prizes-groups');
+            $form->select('product_id', '物料')->options('/selector/products');
+            $form->text('name', '奖品名称');
+            $form->number('level', '奖品等级')->default('1')->help('奖品等次，一等奖二等奖类，将会按照这个从小到大排序');
+            $form->radio('prize_type', '奖品类型')->options([
+                'empty' => '空奖', 'virtual' => '虚拟奖品', 'material' => '实物奖品'
+            ])->default('empty')->required();
+            $form->radio('is_default', '是否默认中奖')->options(['0' => '否', '1'=> '是'])->default('0')->help('默认中奖，当没抽中的时候，从奖品组默认中奖中随机发放给用户');
+            $form->number('num', '奖品总数')->default('0');
+            $form->number('probability', '中奖概率')->default('0')->help('每组奖品的限量奖品总概率为n*10000,即每种奖品的概率为0~10000，单个默认奖品不考虑概率，多个跟限量奖品一样');
+            $form->text('bz', '奖品描述');
+            $form->textarea('rule_bz', '规则描述');
+            $form->radio('status', '状态')->options([
+                '0' => '停用', '1' => '启用'
+            ])->default('1');
+        })->tab('抽奖配置', function($form){
+            $form->radio('limit_user', '用户限制')->options(['0' => '不限制', '1'=> '限制'])->default('0')->help('当限制用户的时候,则中奖的用户将会在下列用户中产生');
+            $form->tags('seled_users', '限制用户名');
+            $form->radio('user_limit_type', '用户抽奖限制')->options([
+                'no' => '无限制', 'per_day' => '每天至多一次', 'only' => '至多一次'
+            ])->default('no');
+            $form->table('date_config', '日期-发放量', function ($table) {
+                $table->datetime('date', '时间');
+                $table->number('num', '数量');
+            })->default('[]')->help('时间格式如: 2019-11-11 或 2019-11-11 00:00:00');
+
+        })->tab('图库', function($form){
+            $form->embeds('imgs', '附加信息', function ($form) {
+                // 列表小图
+                $form->image('small', '列表方图')->help('方形的图,推荐大小 80px*80px');
+                // 详情图
+                $form->image('detail', '详情')->help('详情图, 推荐长图');
+            });
+        });
 
         return $form;
     }

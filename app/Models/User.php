@@ -35,7 +35,7 @@ class User extends Authenticatable
      */
     public function info()
     {
-        return $this->hasOne('App\Models\UsersInfo');
+        return $this->hasOne('App\Models\UsersInfo', 'user_id');
     }
 
     /**
@@ -45,6 +45,6 @@ class User extends Authenticatable
      */
     public function oauths()
     {
-        return $this->hasMany('App\Models\UsersOauth');
+        return $this->hasMany('App\Models\UsersOauth', 'user_id');
     }
 }

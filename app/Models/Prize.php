@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prize extends Model
 {
+    protected $casts = [
+        'imgs' => 'json',
+        'date_config' => 'json',
+    ];
+
     /**
      * 归属的奖品组
      *
@@ -13,7 +18,7 @@ class Prize extends Model
      */
     public function group()
     {
-        return $this->belongsTo('App\Models\PrizesGroup');
+        return $this->belongsTo('App\Models\PrizesGroup', 'prizes_group_id');
     }
 
     /**
@@ -23,6 +28,7 @@ class Prize extends Model
      */
     public function product()
     {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo('App\Models\Product', 'product_id');
     }
+
 }

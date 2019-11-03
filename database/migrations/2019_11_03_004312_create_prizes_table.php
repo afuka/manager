@@ -24,8 +24,10 @@ class CreatePrizesTable extends Migration
             $table->integer('num')->default(0);
             $table->integer('probability')->default(0);
             $table->enum('user_limit_type', ['no', 'per_day', 'only'])->default('no');
+            $table->enum('limit_user', ['0', '1'])->default('0');
+            $table->longText('seled_users')->nullable();
             $table->json('date_config')->nullable();
-            $table->json('ext_info')->nullable();
+            $table->json('imgs')->nullable();
             $table->text('rule_bz')->nullable();
             $table->enum('is_default', ['0', '1'])->default('0');
             $table->enum('status', ['0', '1'])->default('1');

@@ -20,7 +20,7 @@ class CreatePrizesGroupsTable extends Migration
             $table->datetime('begin');
             $table->datetime('end');
             $table->enum('limit_user', ['0', '1'])->default('0');
-            $table->longText('seled_users')->default('');
+            $table->longText('seled_users')->nullable();
             $table->enum('type', ['lottery'])->default('lottery');
             $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();

@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('sub_title', 64);
             $table->enum('type', ['coupon', 'virtual', 'material'])->default('virtual');
             $table->json('imgs')->nullable();
+            $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();
         });
     }
