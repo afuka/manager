@@ -15,10 +15,10 @@ class CreatePrizesLogsTable extends Migration
     {
         Schema::create('prizes_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('prize_group_id');
+            $table->bigInteger('prizes_group_id');
             $table->bigInteger('prize_id');
             $table->bigInteger('user_id');
-            $table->json('leaving_capital');
+            $table->json('leaving_capital')->nullable();
             $table->string('ip', 16);
             $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();

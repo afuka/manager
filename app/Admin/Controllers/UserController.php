@@ -38,7 +38,7 @@ class UserController extends AdminController
             $filter->column(1/2, function ($filter) {
                 $filter->equal('username', '昵称');
                 $filter->between('updated_at', '更新时间')->datetime();
-                $filter->equal('status')->radio([
+                $filter->equal('status', '状态')->radio([
                     1 => '启用',
                     0 => '停用',
                 ]);
@@ -60,7 +60,7 @@ class UserController extends AdminController
         $grid->column('status', '状态')->display(function($status) {
             $status_dic = [
                 '0' => '<span style="color:red;">停用</span>',
-                '1' => '<span style="color:green;">启用',
+                '1' => '<span style="color:green;">启用</span>',
             ];
             return Arr::get($status_dic, $status, '');
         });
@@ -100,7 +100,7 @@ class UserController extends AdminController
         });
 
         $form->tab('基本信息', function ($form) {
-            $form->row(function($row){
+            $form->row(function($row) use ($form){
                 $row->width(4)->image('avatar', '头像');
                 $row->width(4)->text('nickname', '昵称');
                 $row->width(4)->text('username', '用户名')->required();
@@ -115,6 +115,8 @@ class UserController extends AdminController
                     'female' => '女',
                     'unknown' => '未知'
                 ]);
+                $row->width(2)->text('info.province', '省');
+                $row->width(2)->text('info.city', '市');
                 $row->width(4)->switch('status', '状态');
             });
         })->tab('拓展信息', function ($form) {
@@ -124,7 +126,7 @@ class UserController extends AdminController
             });
 
         });
-
+        
         return $form;
     }
 }

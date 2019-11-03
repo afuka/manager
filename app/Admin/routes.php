@@ -10,8 +10,14 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
     'domain'        => config('admin.route.domain'),
 ], function (Router $router) {
-
+    // 首页
     $router->get('/', 'HomeController@index')->name('admin.home');
+    // 删选条件
+    $router->get('/selector/prizes-groups', 'SelectorController@prizeGroups');
+    // 会员
     $router->resource('users', UserController::class);
-
+    // 抽奖组
+    $router->resource('prizes-groups', PrizesGroupController::class);
+    $router->resource('prizes', PrizesController::class);
+    $router->resource('prizes-logs', PrizesLogController::class);
 });
