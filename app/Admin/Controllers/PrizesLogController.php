@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\PrizesLog;
 use Encore\Admin\Controllers\AdminController;
+use Illuminate\Support\Arr;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -15,7 +16,7 @@ class PrizesLogController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Models\PrizesLog';
+    protected $title = '中奖日志';
 
     /**
      * Make a grid builder.
@@ -25,16 +26,55 @@ class PrizesLogController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new PrizesLog);
+        // 禁用新增
+        $grid->disableCreateButton();
+        // 查询过滤
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->column(1/2, function($filter){
+                $filter->between('id', 'ID');
+                $filter->equal('user.username', '用户名');
+                $filter->equal('user.mobile', '用户手机号');
+                $filter->equal('prizes_group_id', '奖品组')->select('/selector/prizes-groups');
+                $filter->equal('source', '来源')->radio([
+                    'exchange' => '兑换/领取', 'lottery' => '抽奖',
+                ]);
+            });
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('material_id', '物料')->select('/selector/materials');
+                $filter->equal('material_code', '物料码');
+                $filter->between('created_at', '中奖时间')->datetime();
+                $filter->equal('status', '状态')->radio([
+                    1 => '有效',
+                    0 => '作废',
+                ]);
+            });
+        });
 
-        $grid->column('id', __('Id'));
-        $grid->column('prize_group_id', __('Prize group id'));
-        $grid->column('prize_id', __('Prize id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('leaving_capital', __('Leaving capital'));
-        $grid->column('ip', __('Ip'));
-        $grid->column('status', __('Status'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('id', 'ID');
+        $grid->column('prizes_group_id', '奖品组ID');
+        $grid->column('group.title', '奖品组');        
+        $grid->column('prize_id', '奖品ID');
+        $grid->column('prize.name', '奖品');
+        $grid->column('material_id', '物料ID');
+        $grid->column('material.title', '物料名称');
+        $grid->column('user_id', '用户ID');
+        $grid->column('user.username', '用户名');
+        $grid->column('status', '状态')->display(function($status) {
+            $status_dic = [
+                '0' => '<span style="color:red;">作废</span>',
+                '1' => '<span style="color:green;">有效</span>',
+            ];
+            return Arr::get($status_dic, $status, '');
+        });
+        $grid->column('created_at', '中奖时间');
+
+        // 去掉删除按钮
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            $actions->disableView();
+            // $actions->disableEdit();
+        });
 
         return $grid;
     }
@@ -49,16 +89,6 @@ class PrizesLogController extends AdminController
     {
         $show = new Show(PrizesLog::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('prize_group_id', __('Prize group id'));
-        $show->field('prize_id', __('Prize id'));
-        $show->field('user_id', __('User id'));
-        $show->field('leaving_capital', __('Leaving capital'));
-        $show->field('ip', __('Ip'));
-        $show->field('status', __('Status'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-
         return $show;
     }
 
@@ -71,13 +101,31 @@ class PrizesLogController extends AdminController
     {
         $form = new Form(new PrizesLog);
 
-        $form->number('prize_group_id', __('Prize group id'));
-        $form->number('prize_id', __('Prize id'));
-        $form->number('user_id', __('User id'));
-        $form->text('leaving_capital', __('Leaving capital'));
-        $form->ip('ip', __('Ip'));
-        $form->text('status', __('Status'))->default('1');
+        // 去掉`删除`按钮
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
 
+        $form->text('group.title', '奖品组')->readonly();
+        $form->text('prize.name', '奖品名称')->readonly();
+        $form->text('material.title', '物料名称')->readonly();
+        $form->text('material_code', '物料代码')->readonly();
+        $form->text('user.username', '用户名')->readonly();
+        $form->text('user.mobile', '用户手机号')->readonly();
+        $form->select('source', '来源')->options([
+            '' => '', 'exchange' => '兑换/领取', 'lottery' => '抽奖'
+        ])->readonly();
+        $form->ip('ip', 'IP地址')->readonly();
+        $form->datetime('created_at', '中奖时间')->readonly();
+        $form->embeds('leaving_capital', '留资信息', function ($form) {
+            $form->text('name', '收件人');
+            $form->mobile('mobile', '手机号');
+            $form->text('address', '收件地址');
+        });
+        $form->radio('status', '状态')->options([
+            '0' => '作废', '1' => '有效'
+        ])->default('1');
         return $form;
     }
 }

@@ -99,6 +99,12 @@ class PrizesController extends AdminController
     {
         $form = new Form(new Prize);
 
+        // 去掉`删除`按钮
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
+
         $form->tab('基本信息', function($form) {
             $form->select('prizes_group_id', '奖品组')->options('/selector/prizes-groups');
             $form->select('material_id', '物料')->options('/selector/materials');

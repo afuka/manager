@@ -18,7 +18,12 @@ class CreateMaterialsTable extends Migration
             $table->string('title', 32);
             $table->string('sub_title', 64);
             $table->enum('type', ['coupon', 'virtual', 'material'])->default('virtual');
+            $table->tinyInteger('limit_draw')->default(1);
+            $table->tinyInteger('cost')->default(0);
+            $table->tinyInteger('num')->default(0);
             $table->json('imgs')->nullable();
+            $table->json('ext_info')->nullable();
+            $table->text('bz')->nullable();
             $table->enum('status', ['0', '1'])->default('1');
             $table->timestamps();
         });

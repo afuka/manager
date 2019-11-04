@@ -15,8 +15,11 @@ class CreatePrizesLogsTable extends Migration
     {
         Schema::create('prizes_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('prizes_group_id');
-            $table->bigInteger('prize_id');
+            $table->bigInteger('prizes_group_id')->default(0);
+            $table->bigInteger('prize_id')->default(0);
+            $table->bigInteger('material_id')->default(0);
+            $table->string('material_code', 32)->default('');
+            $table->enum('source', ['', 'exchange', 'lottery'])->default();
             $table->bigInteger('user_id');
             $table->json('leaving_capital')->nullable();
             $table->string('ip', 16);

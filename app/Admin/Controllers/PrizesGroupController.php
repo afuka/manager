@@ -63,14 +63,14 @@ class PrizesGroupController extends AdminController
                 'lottery' => '随机抽奖',
             ];
             return Arr::get($type_dic, $type, '');
-        });;
+        });
         $grid->column('status', '状态')->display(function($status) {
             $status_dic = [
                 '0' => '<span style="color:red;">停用</span>',
                 '1' => '<span style="color:green;">启用</span>',
             ];
             return Arr::get($status_dic, $status, '');
-        });;
+        });
         $grid->column('created_at', '创建时间');
 
         // 去掉删除按钮
@@ -106,6 +106,12 @@ class PrizesGroupController extends AdminController
     protected function form()
     {
         $form = new Form(new PrizesGroup);
+
+        // 去掉`删除`按钮
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
 
         $form->text('title', '标题')->required();
         $form->text('sub_title', '副标题');
