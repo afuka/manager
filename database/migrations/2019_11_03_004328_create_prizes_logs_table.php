@@ -19,7 +19,7 @@ class CreatePrizesLogsTable extends Migration
             $table->bigInteger('prize_id')->default(0);
             $table->bigInteger('material_id')->default(0);
             $table->string('material_code', 32)->default('');
-            $table->enum('source', ['', 'exchange', 'lottery'])->default();
+            $table->enum('source', ['', 'exchange', 'lottery'])->default('');
             $table->bigInteger('user_id');
             $table->json('leaving_capital')->nullable();
             $table->string('ip', 16);
