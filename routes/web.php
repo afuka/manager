@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
 });
+// 微信路由
+
+Route::any('/wechat', 'WeChatController@serve');

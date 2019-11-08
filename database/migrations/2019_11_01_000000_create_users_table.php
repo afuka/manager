@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('nickname', 64);
             $table->string('avatar', 128);
             $table->string('email', 128);
-            $table->tinyInteger('status', 2)->default('1');
+            $table->tinyInteger('status')->default('1');
             $table->timestamps();
         });
     }

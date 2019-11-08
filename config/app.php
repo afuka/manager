@@ -167,6 +167,7 @@ return [
          */
         Encore\Admin\AdminServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Overtrue\LaravelWeChat\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -226,8 +227,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        // 第三方
         'Image' => Intervention\Image\Facades\Image::class,
-
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
     ],
 
 ];

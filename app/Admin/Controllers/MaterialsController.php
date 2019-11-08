@@ -73,6 +73,7 @@ class MaterialsController extends AdminController
         });
 
         return $grid;
+
     }
 
     /**
